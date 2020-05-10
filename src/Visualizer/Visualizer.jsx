@@ -16,7 +16,34 @@ class Visaulizer extends React.Component {
       finishRow: 20,
       finsihCol: 20,
       mouseIsPressed: false,
+      isRunning: false,
     };
+    this.resetState = this.resetState.bind(this);
+    this.visualizeDijkstra = this.visualizeDijkstra.bind(this);
+    this.animateDijkstra = this.animateDijkstra.bind(this);
+    this.resetAnimateDijkstra = this.resetAnimateDijkstra.bind(this);
+  }
+
+  resetState() {
+    this.setState(
+      {
+        grid: this.getInitialGrid(),
+        gridRows: 30,
+        gridCols: 30,
+        startRow: 10,
+        startCol: 10,
+        finishRow: 20,
+        finsihCol: 20,
+        mouseIsPressed: false,
+        isRunning: false,
+      },
+      () => {
+        for (let timeoutID of this.state.timeouts) {
+          clearTimeout(timeoutID);
+        }
+        this.resetAnimateDijkstra();
+      }
+    );
   }
 
   componentDidMount() {
@@ -65,18 +92,41 @@ class Visaulizer extends React.Component {
   }
 
   animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
-    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-      if (i === visitedNodesInOrder.length) {
-        setTimeout(() => {
-          this.animateShortestPath(nodesInShortestPathOrder);
-        }, 10 * i);
-        return;
-      }
-      setTimeout(() => {
+    console.log("In Animate:", this.state.isRunning);
+    const timeoutArray = [];
+    // Iterate through up until one before last element.
+    for (let i = 0; i <= visitedNodesInOrder.length - 1; i++) {
+      let timeoutID = setTimeout(() => {
         const node = visitedNodesInOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
           "node node-visited";
       }, 10 * i);
+      timeoutArray.push(timeoutID);
+    }
+    // The last element is finish node.
+    let timeoutID = setTimeout(() => {
+      this.animateShortestPath(nodesInShortestPathOrder);
+    }, 10 * visitedNodesInOrder.length);
+    timeoutArray.push(timeoutID);
+    this.setState({ timeouts: timeoutArray }, () => {
+      return 0;
+    });
+    return;
+  }
+
+  resetAnimateDijkstra() {
+    for (let row = 0; row < this.state.gridRows; row++) {
+      for (let col = 0; col < this.state.gridCols; col++) {
+        if (this.state.grid[row][col].isStart) {
+          document.getElementById(`node-${row}-${col}`).className =
+            "node node-start";
+        } else if (this.state.grid[row][col].isFinish) {
+          document.getElementById(`node-${row}-${col}`).className =
+            "node node-finish";
+        } else {
+          document.getElementById(`node-${row}-${col}`).className = "node";
+        }
+      }
     }
   }
 
@@ -91,12 +141,16 @@ class Visaulizer extends React.Component {
   }
 
   visualizeDijkstra() {
-    const { grid } = this.state;
-    const startNode = grid[this.state.startRow][this.state.startCol];
-    const finishNode = grid[this.state.finishRow][this.state.finsihCol];
-    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    // this.state.isRunning = true;
+    this.setState({ isRunning: true }, function () {
+      console.log("In Visualize:", this.state.isRunning);
+      const { grid } = this.state;
+      const startNode = grid[this.state.startRow][this.state.startCol];
+      const finishNode = grid[this.state.finishRow][this.state.finsihCol];
+      const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    });
   }
 
   render() {
@@ -104,9 +158,10 @@ class Visaulizer extends React.Component {
 
     return (
       <>
-        <button onClick={() => this.visualizeDijkstra()}>
+        <button onClick={this.visualizeDijkstra}>
           Visualize Dijkstra's Algorithm
         </button>
+        <button onClick={this.resetState}>Press to Reset!</button>
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
