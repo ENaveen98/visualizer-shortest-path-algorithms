@@ -14,36 +14,40 @@ class Visaulizer extends React.Component {
       startRow: 10,
       startCol: 10,
       finishRow: 20,
-      finsihCol: 20,
+      finishCol: 20,
       mouseIsPressed: false,
       isRunning: false,
+      timeouts: [],
     };
     this.resetState = this.resetState.bind(this);
+    this.getInitialGrid = this.getInitialGrid.bind(this);
+    this.createNode = this.createNode.bind(this);
     this.visualizeDijkstra = this.visualizeDijkstra.bind(this);
     this.animateDijkstra = this.animateDijkstra.bind(this);
     this.resetAnimateDijkstra = this.resetAnimateDijkstra.bind(this);
+    this.handleColsChange = this.handleColsChange.bind(this);
+    this.handleRowsChange = this.handleRowsChange.bind(this);
+    this.refreshGrid = this.refreshGrid.bind(this);
   }
 
   resetState() {
-    this.setState(
-      {
-        grid: this.getInitialGrid(),
-        gridRows: 30,
-        gridCols: 30,
-        startRow: 10,
-        startCol: 10,
-        finishRow: 20,
-        finsihCol: 20,
-        mouseIsPressed: false,
-        isRunning: false,
-      },
-      () => {
-        for (let timeoutID of this.state.timeouts) {
-          clearTimeout(timeoutID);
-        }
-        this.resetAnimateDijkstra();
+    if (this.state.isRunning) {
+      for (let timeoutID of this.state.timeouts) {
+        clearTimeout(timeoutID);
       }
-    );
+      this.resetAnimateDijkstra();
+    }
+    this.setState({
+      grid: this.getInitialGrid(),
+      // gridRows: 30,
+      // gridCols: 30,
+      startRow: 10,
+      startCol: 10,
+      finishRow: 20,
+      finishCol: 20,
+      mouseIsPressed: false,
+      isRunning: false,
+    });
   }
 
   componentDidMount() {
@@ -68,7 +72,7 @@ class Visaulizer extends React.Component {
       col,
       row,
       isStart: row === this.state.startRow && col === this.state.startCol,
-      isFinish: row === this.state.finishRow && col === this.state.finsihCol,
+      isFinish: row === this.state.finishRow && col === this.state.finishCol,
       distance: Infinity,
       isVisited: false,
       isWall: false,
@@ -128,14 +132,19 @@ class Visaulizer extends React.Component {
   resetAnimateDijkstra() {
     for (let row = 0; row < this.state.gridRows; row++) {
       for (let col = 0; col < this.state.gridCols; col++) {
-        if (this.state.grid[row][col].isStart) {
-          document.getElementById(`node-${row}-${col}`).className =
-            "node node-start";
-        } else if (this.state.grid[row][col].isFinish) {
-          document.getElementById(`node-${row}-${col}`).className =
-            "node node-finish";
-        } else {
-          document.getElementById(`node-${row}-${col}`).className = "node";
+        try {
+          if (this.state.grid[row][col].isStart) {
+            document.getElementById(`node-${row}-${col}`).className =
+              "node node-start";
+          } else if (this.state.grid[row][col].isFinish) {
+            document.getElementById(`node-${row}-${col}`).className =
+              "node node-finish";
+          } else {
+            document.getElementById(`node-${row}-${col}`).className = "node";
+          }
+        } catch (err) {
+          console.log(err);
+          console.log(row, col, this.state.gridRows, this.state.gridCols);
         }
       }
     }
@@ -157,11 +166,42 @@ class Visaulizer extends React.Component {
       console.log("In Visualize:", this.state.isRunning);
       const { grid } = this.state;
       const startNode = grid[this.state.startRow][this.state.startCol];
-      const finishNode = grid[this.state.finishRow][this.state.finsihCol];
+      const finishNode = grid[this.state.finishRow][this.state.finishCol];
       const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
       const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
       this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
     });
+  }
+
+  handleRowsChange(event) {
+    if (!this.state.isRunning) {
+      this.setState(
+        { gridRows: event.target.value },
+        this.setState({ grid: this.getInitialGrid() })
+      );
+    }
+  }
+  handleColsChange(event) {
+    if (!this.state.isRunning) {
+      let gridCols = event.target.value;
+      let prvStartCol = this.state.startCol;
+      let startCol = gridCols < prvStartCol + 1 ? gridCols - 1 : prvStartCol;
+      let prvFinishCol = this.state.finishCol;
+      let finishCol = gridCols < prvFinishCol + 1 ? gridCols - 1 : prvFinishCol;
+      this.setState(
+        { gridCols: gridCols, startCol: startCol, finishCol: finishCol },
+        () => {
+          this.setState({ grid: this.getInitialGrid() }, () => {
+            return 0;
+          });
+        }
+        // this.refreshGrid()
+      );
+    }
+  }
+
+  refreshGrid() {
+    this.setState({ grid: this.getInitialGrid() });
   }
 
   render() {
@@ -173,6 +213,26 @@ class Visaulizer extends React.Component {
           Visualize Dijkstra's Algorithm
         </button>
         <button onClick={this.resetState}>Press to Reset!</button>
+        <label>Rows (between 10 and 50):</label>
+        <input
+          type="range"
+          id="vol"
+          name="vol"
+          min="10"
+          max="50"
+          value={this.state.gridRows}
+          onChange={this.handleRowsChange}
+        ></input>
+        <label>Columns (between 10 and 50):</label>
+        <input
+          type="range"
+          id="vol"
+          name="vol"
+          min="10"
+          max="50"
+          value={this.state.gridCols}
+          onChange={this.handleColsChange}
+        ></input>
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
