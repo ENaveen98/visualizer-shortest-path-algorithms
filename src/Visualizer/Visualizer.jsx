@@ -41,10 +41,10 @@ class Visaulizer extends React.Component {
       grid: this.getInitialGrid(),
       // gridRows: 30,
       // gridCols: 30,
-      startRow: 10,
-      startCol: 10,
-      finishRow: 20,
-      finishCol: 20,
+      // startRow: 10,
+      // startCol: 10,
+      // finishRow: 20,
+      // finishCol: 20,
       mouseIsPressed: false,
       isRunning: false,
     });
@@ -132,32 +132,35 @@ class Visaulizer extends React.Component {
   resetAnimateDijkstra() {
     for (let row = 0; row < this.state.gridRows; row++) {
       for (let col = 0; col < this.state.gridCols; col++) {
-        try {
-          if (this.state.grid[row][col].isStart) {
-            document.getElementById(`node-${row}-${col}`).className =
-              "node node-start";
-          } else if (this.state.grid[row][col].isFinish) {
-            document.getElementById(`node-${row}-${col}`).className =
-              "node node-finish";
-          } else {
-            document.getElementById(`node-${row}-${col}`).className = "node";
-          }
-        } catch (err) {
-          console.log(err);
-          console.log(row, col, this.state.gridRows, this.state.gridCols);
+        if (this.state.grid[row][col].isStart) {
+          document.getElementById(`node-${row}-${col}`).className =
+            "node node-start";
+        } else if (this.state.grid[row][col].isFinish) {
+          document.getElementById(`node-${row}-${col}`).className =
+            "node node-finish";
+        } else {
+          document.getElementById(`node-${row}-${col}`).className = "node";
         }
       }
     }
   }
 
   animateShortestPath(nodesInShortestPathOrder) {
+    const timeoutArray = [];
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-      setTimeout(() => {
+      let timeoutID = setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
           "node node-shortest-path";
       }, 50 * i);
+      timeoutArray.push(timeoutID);
     }
+    this.setState(
+      { timeouts: this.state.timeouts.concat(timeoutArray) },
+      () => {
+        return 0;
+      }
+    );
   }
 
   visualizeDijkstra() {
@@ -175,9 +178,19 @@ class Visaulizer extends React.Component {
 
   handleRowsChange(event) {
     if (!this.state.isRunning) {
+      let gridRows = event.target.value;
+      let prvStartRow = this.state.startRow;
+      let startRow = gridRows < prvStartRow + 1 ? gridRows - 1 : prvStartRow;
+      let prvFinishRow = this.state.finishRow;
+      let finishRow = gridRows < prvFinishRow + 1 ? gridRows - 1 : prvFinishRow;
       this.setState(
-        { gridRows: event.target.value },
-        this.setState({ grid: this.getInitialGrid() })
+        { gridRows: gridRows, startRow: startRow, finishRow: finishRow },
+        () => {
+          this.setState({ grid: this.getInitialGrid() }, () => {
+            return 0;
+          });
+        }
+        // this.refreshGrid()
       );
     }
   }
