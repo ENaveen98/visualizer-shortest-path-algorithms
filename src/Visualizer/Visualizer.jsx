@@ -27,7 +27,6 @@ class Visaulizer extends React.Component {
     this.resetAnimateDijkstra = this.resetAnimateDijkstra.bind(this);
     this.handleColsChange = this.handleColsChange.bind(this);
     this.handleRowsChange = this.handleRowsChange.bind(this);
-    this.refreshGrid = this.refreshGrid.bind(this);
   }
 
   resetState() {
@@ -183,6 +182,7 @@ class Visaulizer extends React.Component {
       let startRow = gridRows < prvStartRow + 1 ? gridRows - 1 : prvStartRow;
       let prvFinishRow = this.state.finishRow;
       let finishRow = gridRows < prvFinishRow + 1 ? gridRows - 1 : prvFinishRow;
+      // Quick hack to set state synchoronously.
       this.setState(
         { gridRows: gridRows, startRow: startRow, finishRow: finishRow },
         () => {
@@ -190,7 +190,6 @@ class Visaulizer extends React.Component {
             return 0;
           });
         }
-        // this.refreshGrid()
       );
     }
   }
@@ -201,6 +200,7 @@ class Visaulizer extends React.Component {
       let startCol = gridCols < prvStartCol + 1 ? gridCols - 1 : prvStartCol;
       let prvFinishCol = this.state.finishCol;
       let finishCol = gridCols < prvFinishCol + 1 ? gridCols - 1 : prvFinishCol;
+      // Quick hack to set state synchoronously.
       this.setState(
         { gridCols: gridCols, startCol: startCol, finishCol: finishCol },
         () => {
@@ -208,13 +208,8 @@ class Visaulizer extends React.Component {
             return 0;
           });
         }
-        // this.refreshGrid()
       );
     }
-  }
-
-  refreshGrid() {
-    this.setState({ grid: this.getInitialGrid() });
   }
 
   render() {
