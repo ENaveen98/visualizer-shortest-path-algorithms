@@ -16,6 +16,19 @@
   background-color: greenyellow;
 }
 
+.messageBox {
+  background-color: rgb(255, 255, 255);
+  font-size: 17px;
+  text-align: center;
+  vertical-align: ;
+}
+.messageBox {
+  border: 20px solid white;
+  border-image-source: url(lightbulb.png);
+  border-image-slice: 33 33;
+  border-image-repeat: round;
+}
+
 .topButtons {
   border-radius: 4px;
   background-color: #f4511e;
@@ -74,7 +87,7 @@
 }
 .resetButton span:after {
   font-family: "Material Icons";
-  content: "backspace";
+  content: "clear";
   /* content: "\2660"; */
   position: absolute;
   opacity: 0;
@@ -128,17 +141,4 @@
 
 .moveFinishButton.topButtons.pressed {
   background-color: red;
-}
-
-.messageBox {
-  background-color: rgb(255, 255, 255);
-  font-size: 17px;
-  text-align: center;
-  vertical-align: middle;
-}
-.messageBox {
-  border: 20px solid white;
-  border-image-source: url(lightbulb.png);
-  border-image-slice: 33 33;
-  border-image-repeat: round;
 }
