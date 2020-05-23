@@ -20,6 +20,7 @@ class Visaulizer extends React.Component {
       timeouts: [],
       changingStart: false,
       changingFinish: false,
+      status: "Welcome!",
     };
     this.resetState = this.resetState.bind(this);
     this.getInitialGrid = this.getInitialGrid.bind(this);
@@ -37,6 +38,7 @@ class Visaulizer extends React.Component {
     this.getNewGridWithFinishChanged = this.getNewGridWithFinishChanged.bind(
       this
     );
+    this.updateMessage = this.updateMessage.bind(this);
   }
 
   // Function to reset/clear board
@@ -54,12 +56,14 @@ class Visaulizer extends React.Component {
       changingStart: false,
       changingFinish: false,
     });
+    this.updateMessage("Board has been reset.");
   }
 
   // after all the elements of the page is rendered correctly, this method is called.
   componentDidMount() {
     const grid = this.getInitialGrid();
     this.setState({ grid });
+    this.updateMessage("Welcome!");
   }
 
   // Get grid when the page reloads/when reset.
@@ -221,6 +225,7 @@ class Visaulizer extends React.Component {
     // this.state.isRunning = true;
     this.setState({ isRunning: true }, function () {
       console.log("In Visualize:", this.state.isRunning);
+      this.updateMessage();
 
       // Reset Move Start Button
       document.getElementById(`startButton`).className = "moveStartButton";
@@ -279,13 +284,26 @@ class Visaulizer extends React.Component {
 
   handleMoveStart() {
     if (this.state.isRunning) {
+      this.updateMessage(
+        "Cannot change while running! Reset to change Start position."
+      );
       return;
     }
-    if (!this.state.changingStart && !this.state.changingFinish) {
+    if (this.state.changingFinish) {
+      this.updateMessage(
+        "Please toggle 'Move Finish' button before choosing this option"
+      );
+      return;
+    }
+    if (!this.state.changingStart) {
+      this.updateMessage(
+        "Click a new box to move the Start position. Toggle button when done."
+      );
       document.getElementById(`startButton`).className =
         "moveStartButton pressed";
       this.setState({ changingStart: true });
     } else {
+      this.updateMessage("You have changed the Start position.");
       document.getElementById(`startButton`).className = "moveStartButton";
       this.setState({ changingStart: false });
     }
@@ -293,15 +311,42 @@ class Visaulizer extends React.Component {
 
   handleMoveFinish() {
     if (this.state.isRunning) {
+      this.updateMessage(
+        "Cannot change while running! Reset to change Finish position."
+      );
       return;
     }
-    if (!this.state.changingStart && !this.state.changingFinish) {
+    if (this.state.changingStart) {
+      this.updateMessage(
+        "Please toggle 'Move Start' button before choosing this option"
+      );
+      return;
+    }
+    if (!this.state.changingFinish) {
+      this.updateMessage(
+        "Click a new box to move the Finish position.\n Toggle button when done."
+      );
       document.getElementById(`finishButton`).className =
         "moveFinishButton pressed";
       this.setState({ changingFinish: true });
     } else {
+      this.updateMessage("You have changed the Finish position.");
       document.getElementById(`finishButton`).className = "moveFinishButton";
       this.setState({ changingFinish: false });
+    }
+  }
+
+  updateMessage(message = "") {
+    let messageBox = document.getElementById("messageBox");
+    //  Update displayed message using the passed argument.
+    if (message) {
+      messageBox.innerText = message;
+    }
+    //  If no message is passed change based on state values
+    else {
+      if (this.state.isRunning) {
+        messageBox.innerText = "Running Dijkstra's Algorithm...";
+      }
     }
   }
 
@@ -359,6 +404,8 @@ class Visaulizer extends React.Component {
           value={this.state.gridCols}
           onChange={this.handleColsChange}
         ></input>
+
+        <p id="messageBox"></p>
 
         <div className="grid">
           {grid.map((row, rowIdx) => {
