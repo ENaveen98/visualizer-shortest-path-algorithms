@@ -1,5 +1,12 @@
 import React from "react";
 import Node from "./Node/Node";
+import {
+  handleMoveStart,
+  handleMoveFinish,
+} from "./StartFinish/MoveStartFinish";
+import { handleRowsChange, handleColsChange } from "./RowsCols/ChangeRowsCols";
+
+import { updateMessage } from "../Messages/messageBoxUtils";
 import { dijkstra, getNodesInShortestPathOrder } from "../Algorithms/dijkstra";
 
 import "./Visualizer.css";
@@ -22,6 +29,15 @@ class Visaulizer extends React.Component {
       changingFinish: false,
       status: "Welcome!",
     };
+
+    // Add Functions exported to the class.
+    this.handleMoveStart = handleMoveStart;
+    this.handleMoveFinish = handleMoveFinish;
+    this.updateMessage = updateMessage;
+    this.handleRowsChange = handleRowsChange;
+    this.handleColsChange = handleColsChange;
+
+    // Bind the function to get access to this.state
     this.resetState = this.resetState.bind(this);
     this.getInitialGrid = this.getInitialGrid.bind(this);
     this.createNode = this.createNode.bind(this);
@@ -243,111 +259,6 @@ class Visaulizer extends React.Component {
       const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
       this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
     });
-  }
-
-  handleRowsChange(event) {
-    if (!this.state.isRunning) {
-      let gridRows = event.target.value;
-      let prvStartRow = this.state.startRow;
-      let startRow = gridRows < prvStartRow + 1 ? gridRows - 1 : prvStartRow;
-      let prvFinishRow = this.state.finishRow;
-      let finishRow = gridRows < prvFinishRow + 1 ? gridRows - 1 : prvFinishRow;
-      // Quick hack to set state synchoronously.
-      this.setState(
-        { gridRows: gridRows, startRow: startRow, finishRow: finishRow },
-        () => {
-          this.setState({ grid: this.getInitialGrid() }, () => {
-            return 0;
-          });
-        }
-      );
-    }
-  }
-  handleColsChange(event) {
-    if (!this.state.isRunning) {
-      let gridCols = event.target.value;
-      let prvStartCol = this.state.startCol;
-      let startCol = gridCols < prvStartCol + 1 ? gridCols - 1 : prvStartCol;
-      let prvFinishCol = this.state.finishCol;
-      let finishCol = gridCols < prvFinishCol + 1 ? gridCols - 1 : prvFinishCol;
-      // Quick hack to set state synchoronously.
-      this.setState(
-        { gridCols: gridCols, startCol: startCol, finishCol: finishCol },
-        () => {
-          this.setState({ grid: this.getInitialGrid() }, () => {
-            return 0;
-          });
-        }
-      );
-    }
-  }
-
-  handleMoveStart() {
-    if (this.state.isRunning) {
-      this.updateMessage(
-        "Cannot change while running! Reset to change Start position."
-      );
-      return;
-    }
-    if (this.state.changingFinish) {
-      this.updateMessage(
-        "Please toggle 'Move Finish' button before choosing this option"
-      );
-      return;
-    }
-    if (!this.state.changingStart) {
-      this.updateMessage(
-        "Click a new box to move the Start position. Toggle button when done."
-      );
-      document.getElementById(`startButton`).className =
-        "moveStartButton pressed";
-      this.setState({ changingStart: true });
-    } else {
-      this.updateMessage("You have changed the Start position.");
-      document.getElementById(`startButton`).className = "moveStartButton";
-      this.setState({ changingStart: false });
-    }
-  }
-
-  handleMoveFinish() {
-    if (this.state.isRunning) {
-      this.updateMessage(
-        "Cannot change while running! Reset to change Finish position."
-      );
-      return;
-    }
-    if (this.state.changingStart) {
-      this.updateMessage(
-        "Please toggle 'Move Start' button before choosing this option"
-      );
-      return;
-    }
-    if (!this.state.changingFinish) {
-      this.updateMessage(
-        "Click a new box to move the Finish position.\n Toggle button when done."
-      );
-      document.getElementById(`finishButton`).className =
-        "moveFinishButton pressed";
-      this.setState({ changingFinish: true });
-    } else {
-      this.updateMessage("You have changed the Finish position.");
-      document.getElementById(`finishButton`).className = "moveFinishButton";
-      this.setState({ changingFinish: false });
-    }
-  }
-
-  updateMessage(message = "") {
-    let messageBox = document.getElementById("messageBox");
-    //  Update displayed message using the passed argument.
-    if (message) {
-      messageBox.innerText = message;
-    }
-    //  If no message is passed change based on state values
-    else {
-      if (this.state.isRunning) {
-        messageBox.innerText = "Running Dijkstra's Algorithm...";
-      }
-    }
   }
 
   render() {
