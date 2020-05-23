@@ -3,6 +3,142 @@
   /* position: absolute; */
 }
 
-.pressed {
-  border-color: red;
+/* .pressed {
+  border-color: green;
+} */
+
+.firstBar {
+  display: grid;
+  grid-template-columns: 20vw 15vw 30vw 15vw 20vw;
+  grid-template-rows: 100px;
+  grid-auto-flow: row;
+  border: 2px solid black;
+  background-color: greenyellow;
+}
+
+.topButtons {
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 20px;
+  padding: 5px;
+  width: 350px;
+  transition: all 0.25s;
+  cursor: pointer;
+  margin: 25px;
+}
+
+/* Overwrite common button styles */
+.algorithmButton {
+  width: 350px;
+}
+
+/* Add custom Animation */
+.algorithmButton span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.25s;
+}
+.algorithmButton span:after {
+  font-family: "Material Icons";
+  content: "send";
+  /* content: "\2660"; */
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -5px;
+  transition: 0.25s;
+}
+.algorithmButton:hover span {
+  padding-right: 35px;
+}
+.algorithmButton:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+/* Overwrite common button styles */
+.resetButton {
+  width: 250px;
+}
+
+/* Add custom Animation */
+.resetButton span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.25s;
+}
+.resetButton span:after {
+  font-family: "Material Icons";
+  content: "backspace";
+  /* content: "\2660"; */
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -5px;
+  transition: 0.25s;
+}
+.resetButton:hover span {
+  padding-right: 35px;
+}
+.resetButton:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+/* Overwrite common button styles */
+.moveStartButton {
+  width: 250px;
+}
+
+/* Add custom Animation */
+.moveStartButton:hover {
+  background-color: green;
+}
+
+.moveStartButton:active {
+  background-color: green;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.moveStartButton.topButtons.pressed {
+  background-color: green;
+}
+
+/* Overwrite common button styles */
+.moveFinishButton {
+  width: 250px;
+}
+
+/* Add custom Animation */
+.moveFinishButton:hover {
+  background-color: red;
+}
+
+.moveFinishButton:active {
+  background-color: red;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.moveFinishButton.topButtons.pressed {
+  background-color: red;
+}
+
+.messageBox {
+  background-color: rgb(255, 255, 255);
+  font-size: 17px;
+  text-align: center;
+  vertical-align: middle;
+}
+.messageBox {
+  border: 20px solid white;
+  border-image-source: url(lightbulb.png);
+  border-image-slice: 33 33;
+  border-image-repeat: round;
 }
