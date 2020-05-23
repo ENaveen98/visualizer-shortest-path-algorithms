@@ -30,7 +30,11 @@ class Visaulizer extends React.Component {
     this.handleColsChange = this.handleColsChange.bind(this);
     this.handleRowsChange = this.handleRowsChange.bind(this);
     this.handleMoveStart = this.handleMoveStart.bind(this);
+    this.handleMoveFinish = this.handleMoveFinish.bind(this);
     this.getNewGridWithStartChanged = this.getNewGridWithStartChanged.bind(
+      this
+    );
+    this.getNewGridWithFinishChanged = this.getNewGridWithFinishChanged.bind(
       this
     );
   }
@@ -107,21 +111,20 @@ class Visaulizer extends React.Component {
       isStart: true,
     };
     this.setState({ startRow: row, startCol: col });
-    // for (let rowIdx = 0; rowIdx < this.state.gridRows; rowIdx++) {
-    //   for (let colIdx = 0; colIdx < this.state.gridCols; colIdx++) {
-    //     if (rowIdx === row && colIdx === col) {
-    //       newGrid[rowIdx][colIdx] = {
-    //         ...newGrid[rowIdx][colIdx],
-    //         isStart: true,
-    //       };
-    //     } else {
-    //       newGrid[rowIdx][colIdx] = {
-    //         ...newGrid[rowIdx][colIdx],
-    //         isStart: false,
-    //       };
-    //     }
-    //   }
-    // }
+    return newGrid;
+  }
+
+  getNewGridWithFinishChanged(grid, row, col) {
+    const newGrid = grid.slice();
+    newGrid[this.state.finishRow][this.state.finishCol] = {
+      ...newGrid[this.state.finishRow][this.state.finishCol],
+      isFinish: false,
+    };
+    newGrid[row][col] = {
+      ...newGrid[row][col],
+      isFinish: true,
+    };
+    this.setState({ finishRow: row, finishCol: col });
     return newGrid;
   }
 
@@ -129,6 +132,13 @@ class Visaulizer extends React.Component {
     console.log(this.state.changingStart);
     if (this.state.changingStart) {
       const newGrid = this.getNewGridWithStartChanged(
+        this.state.grid,
+        row,
+        col
+      );
+      this.setState({ grid: newGrid });
+    } else if (this.state.changingFinish) {
+      const newGrid = this.getNewGridWithFinishChanged(
         this.state.grid,
         row,
         col
@@ -211,6 +221,16 @@ class Visaulizer extends React.Component {
     // this.state.isRunning = true;
     this.setState({ isRunning: true }, function () {
       console.log("In Visualize:", this.state.isRunning);
+
+      // Reset Move Start Button
+      document.getElementById(`startButton`).className = "moveStartButton";
+      this.setState({ changingStart: false });
+
+      // Reset Move Finish Button
+      document.getElementById(`finishButton`).className = "moveFinishButton";
+      this.setState({ changingFinish: false });
+
+      // Algorithm in motion!
       const { grid } = this.state;
       const startNode = grid[this.state.startRow][this.state.startCol];
       const finishNode = grid[this.state.finishRow][this.state.finishCol];
@@ -261,13 +281,27 @@ class Visaulizer extends React.Component {
     if (this.state.isRunning) {
       return;
     }
-    if (!this.state.changingStart) {
+    if (!this.state.changingStart && !this.state.changingFinish) {
       document.getElementById(`startButton`).className =
         "moveStartButton pressed";
       this.setState({ changingStart: true });
     } else {
       document.getElementById(`startButton`).className = "moveStartButton";
       this.setState({ changingStart: false });
+    }
+  }
+
+  handleMoveFinish() {
+    if (this.state.isRunning) {
+      return;
+    }
+    if (!this.state.changingStart && !this.state.changingFinish) {
+      document.getElementById(`finishButton`).className =
+        "moveFinishButton pressed";
+      this.setState({ changingFinish: true });
+    } else {
+      document.getElementById(`finishButton`).className = "moveFinishButton";
+      this.setState({ changingFinish: false });
     }
   }
 
@@ -284,13 +318,22 @@ class Visaulizer extends React.Component {
         {/* Button to Reset State */}
         <button onClick={this.resetState}>Press to Reset!</button>
 
-        {/* Button to Reset State */}
+        {/* Button to Move Start node across grid */}
         <button
           onClick={this.handleMoveStart}
           className="moveStartButton"
           id="startButton"
         >
           Move Start!
+        </button>
+
+        {/* Button to Move Finish node across grid */}
+        <button
+          onClick={this.handleMoveFinish}
+          className="moveFinishButton"
+          id="finishButton"
+        >
+          Move Finish!
         </button>
 
         {/* Slider to change Rows */}
