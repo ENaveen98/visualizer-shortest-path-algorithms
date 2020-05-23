@@ -20,7 +20,7 @@
   background-color: rgb(255, 255, 255);
   font-size: 17px;
   text-align: center;
-  vertical-align: ;
+  vertical-align: middle;
 }
 .messageBox {
   border: 20px solid white;
