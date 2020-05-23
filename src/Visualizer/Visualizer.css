@@ -2,3 +2,7 @@
   margin: 100px 0 0;
   /* position: absolute; */
 }
+
+.pressed {
+  border-color: red;
+}

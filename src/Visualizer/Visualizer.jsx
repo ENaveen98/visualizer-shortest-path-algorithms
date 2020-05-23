@@ -9,15 +9,17 @@ class Visaulizer extends React.Component {
     super(props);
     this.state = {
       grid: [],
-      gridRows: 30,
+      gridRows: 20,
       gridCols: 30,
       startRow: 10,
       startCol: 10,
-      finishRow: 20,
-      finishCol: 20,
+      finishRow: 17,
+      finishCol: 25,
       mouseIsPressed: false,
       isRunning: false,
       timeouts: [],
+      changingStart: false,
+      changingFinish: false,
     };
     this.resetState = this.resetState.bind(this);
     this.getInitialGrid = this.getInitialGrid.bind(this);
@@ -27,8 +29,13 @@ class Visaulizer extends React.Component {
     this.resetAnimateDijkstra = this.resetAnimateDijkstra.bind(this);
     this.handleColsChange = this.handleColsChange.bind(this);
     this.handleRowsChange = this.handleRowsChange.bind(this);
+    this.handleMoveStart = this.handleMoveStart.bind(this);
+    this.getNewGridWithStartChanged = this.getNewGridWithStartChanged.bind(
+      this
+    );
   }
 
+  // Function to reset/clear board
   resetState() {
     if (this.state.isRunning) {
       for (let timeoutID of this.state.timeouts) {
@@ -38,22 +45,20 @@ class Visaulizer extends React.Component {
     }
     this.setState({
       grid: this.getInitialGrid(),
-      // gridRows: 30,
-      // gridCols: 30,
-      // startRow: 10,
-      // startCol: 10,
-      // finishRow: 20,
-      // finishCol: 20,
       mouseIsPressed: false,
       isRunning: false,
+      changingStart: false,
+      changingFinish: false,
     });
   }
 
+  // after all the elements of the page is rendered correctly, this method is called.
   componentDidMount() {
     const grid = this.getInitialGrid();
     this.setState({ grid });
   }
 
+  // Get grid when the page reloads/when reset.
   getInitialGrid() {
     const grid = [];
     for (let row = 0; row < this.state.gridRows; row++) {
@@ -66,6 +71,7 @@ class Visaulizer extends React.Component {
     return grid;
   }
 
+  // Create node as an Object with various useful properties.
   createNode(col, row) {
     return {
       col,
@@ -90,9 +96,48 @@ class Visaulizer extends React.Component {
     return newGrid;
   };
 
+  getNewGridWithStartChanged(grid, row, col) {
+    const newGrid = grid.slice();
+    newGrid[this.state.startRow][this.state.startCol] = {
+      ...newGrid[this.state.startRow][this.state.startCol],
+      isStart: false,
+    };
+    newGrid[row][col] = {
+      ...newGrid[row][col],
+      isStart: true,
+    };
+    this.setState({ startRow: row, startCol: col });
+    // for (let rowIdx = 0; rowIdx < this.state.gridRows; rowIdx++) {
+    //   for (let colIdx = 0; colIdx < this.state.gridCols; colIdx++) {
+    //     if (rowIdx === row && colIdx === col) {
+    //       newGrid[rowIdx][colIdx] = {
+    //         ...newGrid[rowIdx][colIdx],
+    //         isStart: true,
+    //       };
+    //     } else {
+    //       newGrid[rowIdx][colIdx] = {
+    //         ...newGrid[rowIdx][colIdx],
+    //         isStart: false,
+    //       };
+    //     }
+    //   }
+    // }
+    return newGrid;
+  }
+
   handleMouseDown(row, col) {
-    const newGrid = this.getNewGridWithWallToggled(this.state.grid, row, col);
-    this.setState({ grid: newGrid, mouseIsPressed: true });
+    console.log(this.state.changingStart);
+    if (this.state.changingStart) {
+      const newGrid = this.getNewGridWithStartChanged(
+        this.state.grid,
+        row,
+        col
+      );
+      this.setState({ grid: newGrid });
+    } else {
+      const newGrid = this.getNewGridWithWallToggled(this.state.grid, row, col);
+      this.setState({ grid: newGrid, mouseIsPressed: true });
+    }
   }
 
   handleMouseEnter(row, col) {
@@ -212,15 +257,43 @@ class Visaulizer extends React.Component {
     }
   }
 
+  handleMoveStart() {
+    if (this.state.isRunning) {
+      return;
+    }
+    if (!this.state.changingStart) {
+      document.getElementById(`startButton`).className =
+        "moveStartButton pressed";
+      this.setState({ changingStart: true });
+    } else {
+      document.getElementById(`startButton`).className = "moveStartButton";
+      this.setState({ changingStart: false });
+    }
+  }
+
   render() {
     const { grid, mouseIsPressed } = this.state;
 
     return (
       <>
+        {/* Button to Reset State */}
         <button onClick={this.visualizeDijkstra}>
           Visualize Dijkstra's Algorithm
         </button>
+
+        {/* Button to Reset State */}
         <button onClick={this.resetState}>Press to Reset!</button>
+
+        {/* Button to Reset State */}
+        <button
+          onClick={this.handleMoveStart}
+          className="moveStartButton"
+          id="startButton"
+        >
+          Move Start!
+        </button>
+
+        {/* Slider to change Rows */}
         <label>Rows (between 10 and 50):</label>
         <input
           type="range"
@@ -231,6 +304,8 @@ class Visaulizer extends React.Component {
           value={this.state.gridRows}
           onChange={this.handleRowsChange}
         ></input>
+
+        {/* Slider to change Columns */}
         <label>Columns (between 10 and 50):</label>
         <input
           type="range"
@@ -241,6 +316,7 @@ class Visaulizer extends React.Component {
           value={this.state.gridCols}
           onChange={this.handleColsChange}
         ></input>
+
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
@@ -250,6 +326,7 @@ class Visaulizer extends React.Component {
                   return (
                     <Node
                       key={nodeIdx}
+                      row={row}
                       col={col}
                       isFinish={isFinish}
                       isStart={isStart}
@@ -260,7 +337,6 @@ class Visaulizer extends React.Component {
                         this.handleMouseEnter(row, col)
                       }
                       onMouseUp={() => this.handleMouseUp()}
-                      row={row}
                     ></Node>
                   );
                 })}
