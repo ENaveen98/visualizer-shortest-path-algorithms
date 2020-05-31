@@ -3,6 +3,9 @@
 
 
 ### Author: E Naveen
+### Email: enaveen98@gmail.com
+
+### Feel free to fork this project and try for yourself!
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
