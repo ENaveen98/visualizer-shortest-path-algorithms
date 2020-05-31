@@ -6,6 +6,7 @@ Features of the Visualizer include
 - Ability to Reset at any point in time even if the Algorithm is currently running.
 - Move the Start & Finish node/position.
 - Change the number of Rows/Columns interactively using a Slider.
+- A message board for assistance in navigating through the interface and changing the available configurations.
 
 This project was built for sharpening my React/HTML/CSS skills and to build a cool visualization of how an Algorithm works behind the scnenes. Special credits to Clement for the motivation behind this project and for his tutorials.
 
