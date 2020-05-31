@@ -239,7 +239,7 @@ class Visaulizer extends React.Component {
         </div>
         <div>
           {/* Slider to change Rows */}
-          <label id="numRows">{"Rows:" + this.state.gridRows}</label>
+          <label id="numRows">{"Rows: " + this.state.gridRows}</label>
           <input
             type="range"
             id="vol"
@@ -251,7 +251,7 @@ class Visaulizer extends React.Component {
             onChange={this.handleRowsChange}
           ></input>
           {/* Slider to change Columns */}
-          <label id="numCols">{"Cols:" + this.state.gridCols}</label>
+          <label id="numCols">{"Columns: " + this.state.gridCols}</label>
           <input
             type="range"
             id="vol"
