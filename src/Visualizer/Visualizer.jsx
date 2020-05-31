@@ -258,7 +258,7 @@ class Visaulizer extends React.Component {
             className="colSlider"
             name="vol"
             min="10"
-            max="50"
+            max="65"
             value={this.state.gridCols}
             onChange={this.handleColsChange}
           ></input>
