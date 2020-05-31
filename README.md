@@ -8,7 +8,7 @@ Features of the Visualizer include
 - Change the number of Rows/Columns interactively using a Slider.
 - A message board for assistance in navigating through the interface and changing the available configurations.
 
-This project was built for sharpening my React/HTML/CSS skills and to build a cool visualization of how an Algorithm works behind the scnenes. Special credits to Clement for the motivation behind this project and for his tutorials.
+This project was built for sharpening my React/HTML/CSS skills and to build a cool visualization of how an Algorithm works behind the scnenes. Special credits to Clement for the motivation behind this project and for his tutorials. In the future this could be extended to visualize many sorts of Algorithms by simply using this as a template and building on top of it.
 
 ### Author: E Naveen
 ### Email: enaveen98@gmail.com
