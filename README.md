@@ -1,6 +1,7 @@
 # Visualizer for Shortest Path Algorithms
 ## Implemented Algorithm: Dijkstra's Shortest Path
 
+This project was built for sharpening my React/HTML/CSS skills and to build a cool visualization of how an Algorithm works behind the scnenes.
 
 ### Author: E Naveen
 ### Email: enaveen98@gmail.com
