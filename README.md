@@ -1,6 +1,12 @@
 # Visualizer for Shortest Path Algorithms
 ## Implemented Algorithm: Dijkstra's Shortest Path
 
+Features of the Visualizer include
+- Animated Visualization button.
+- Ability to Reset at any point in time even if the Algorithm is currently running.
+- Move the Start & Finish node/position.
+- Change the number of Rows/Columns interactively using a Slider.
+
 This project was built for sharpening my React/HTML/CSS skills and to build a cool visualization of how an Algorithm works behind the scnenes. Special credits to Clement for the motivation behind this project and for his tutorials.
 
 ### Author: E Naveen
