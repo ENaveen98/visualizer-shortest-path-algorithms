@@ -1,5 +1,5 @@
 .grid {
-  margin: 100px 0 0;
+  margin: 25px 0 0;
   /* position: absolute; */
 }
 
@@ -16,12 +16,14 @@
   background-color: greenyellow;
 }
 
+/* Styling Message Box at center of screen */
 .messageBox {
   background-color: rgb(255, 255, 255);
   font-size: 17px;
   text-align: center;
   vertical-align: middle;
 }
+/* Tried adding border using border image repeat */
 .messageBox {
   border: 20px solid white;
   border-image-source: url(lightbulb.png);
@@ -45,7 +47,7 @@
 
 /* Overwrite common button styles */
 .algorithmButton {
-  width: 350px;
+  width: 18vw;
 }
 
 /* Add custom Animation */
@@ -75,7 +77,7 @@
 
 /* Overwrite common button styles */
 .resetButton {
-  width: 250px;
+  width: 13vw;
 }
 
 /* Add custom Animation */
@@ -105,7 +107,7 @@
 
 /* Overwrite common button styles */
 .moveStartButton {
-  width: 250px;
+  width: 13vw;
 }
 
 /* Add custom Animation */
@@ -125,7 +127,7 @@
 
 /* Overwrite common button styles */
 .moveFinishButton {
-  width: 250px;
+  width: 13vw;
 }
 
 /* Add custom Animation */
@@ -141,4 +143,110 @@
 
 .moveFinishButton.topButtons.pressed {
   background-color: red;
+}
+
+/* Styling the sliders */
+input[type="range"] {
+  /* background-color: yellow; */
+  height: 12px;
+  -webkit-appearance: none;
+  margin: auto 0;
+  padding-top: 20px;
+  width: 20vw;
+}
+input[type="range"]:focus {
+  outline: none;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 14px;
+  cursor: pointer;
+  /* animate: 0.2s; */
+  box-shadow: 1px 1px 1px rgb(114, 190, 248);
+  background: rgb(114, 190, 248);
+  border-radius: 14px;
+  border: 0px solid #000000;
+}
+input[type="range"]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 40px;
+  border-radius: 12px;
+  background: #529de1;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -3px;
+}
+input[type="range"]:focus::-webkit-slider-runnable-track {
+  background: rgb(114, 190, 248);
+}
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 14px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 1px 1px 1px rgb(114, 190, 248);
+  background: rgb(114, 190, 248);
+  border-radius: 14px;
+  border: 0px solid #000000;
+}
+input[type="range"]::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 40px;
+  border-radius: 12px;
+  background: #f4511e;
+  cursor: pointer;
+}
+input[type="range"]::-ms-track {
+  width: 100%;
+  height: 14px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type="range"]::-ms-fill-lower {
+  background: rgb(114, 190, 248);
+  border: 0px solid #000000;
+  border-radius: 28px;
+  box-shadow: 1px 1px 1px rgb(114, 190, 248);
+}
+input[type="range"]::-ms-fill-upper {
+  background: rgb(114, 190, 248);
+  border: 0px solid #000000;
+  border-radius: 28px;
+  box-shadow: 1px 1px 1px rgb(114, 190, 248);
+}
+input[type="range"]::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 0px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 40px;
+  border-radius: 12px;
+  background: #f4511e;
+  cursor: pointer;
+}
+input[type="range"]:focus::-ms-fill-lower {
+  background: rgb(114, 190, 248);
+}
+input[type="range"]:focus::-ms-fill-upper {
+  background: rgb(114, 190, 248);
+}
+
+#numRows {
+  /* background-color: #f4511e; */
+  font-size: 20px;
+  padding-right: 20px;
+}
+
+#numCols {
+  /* background-color: #f4511e; */
+  font-size: 20px;
+  padding-right: 20px;
+  padding-left: 40vw;
 }

@@ -22,12 +22,12 @@ class Visaulizer extends React.Component {
     super(props);
     this.state = {
       grid: [],
-      gridRows: 20,
-      gridCols: 30,
-      startRow: 10,
+      gridRows: 18,
+      gridCols: 50,
+      startRow: 5,
       startCol: 10,
-      finishRow: 17,
-      finishCol: 25,
+      finishRow: 15,
+      finishCol: 40,
       mouseIsPressed: false,
       isRunning: false,
       timeouts: [],
@@ -90,7 +90,7 @@ class Visaulizer extends React.Component {
   componentDidMount() {
     const grid = this.getInitialGrid();
     this.setState({ grid });
-    this.updateMessage("Welcome to Visualizer !");
+    this.updateMessage("Welcome!");
   }
 
   // Get grid when the page reloads/when reset.
@@ -237,30 +237,32 @@ class Visaulizer extends React.Component {
             <span>Move Finish!</span>
           </button>
         </div>
-        {/* Slider to change Rows */}
-        <label>Rows (between 10 and 50):</label>
-        <input
-          type="range"
-          id="vol"
-          name="vol"
-          min="10"
-          max="50"
-          value={this.state.gridRows}
-          onChange={this.handleRowsChange}
-        ></input>
-
-        {/* Slider to change Columns */}
-        <label>Columns (between 10 and 50):</label>
-        <input
-          type="range"
-          id="vol"
-          name="vol"
-          min="10"
-          max="50"
-          value={this.state.gridCols}
-          onChange={this.handleColsChange}
-        ></input>
-
+        <div>
+          {/* Slider to change Rows */}
+          <label id="numRows">{"Rows:" + this.state.gridRows}</label>
+          <input
+            type="range"
+            id="vol"
+            className="rowSlider"
+            name="vol"
+            min="10"
+            max="20"
+            value={this.state.gridRows}
+            onChange={this.handleRowsChange}
+          ></input>
+          {/* Slider to change Columns */}
+          <label id="numCols">{"Cols:" + this.state.gridCols}</label>
+          <input
+            type="range"
+            id="vol"
+            className="colSlider"
+            name="vol"
+            min="10"
+            max="50"
+            value={this.state.gridCols}
+            onChange={this.handleColsChange}
+          ></input>
+        </div>
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
